@@ -125,3 +125,32 @@ CREATE TABLE IF NOT EXISTS `0_ksf_employeepay_tax_brackets` (
     PRIMARY KEY (`bracket_id`),
     KEY `idx_dates` (`effective_from`, `effective_to`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `0_ksf_employeepay_sections` (
+    `section_id` INT(11) NOT NULL AUTO_INCREMENT,
+    `section_name` VARCHAR(100) NOT NULL COMMENT 'e.g., Income, Pension, Tax, Other Deductions',
+    `display_order` INT(11) DEFAULT 10,
+    `section_type` VARCHAR(20) DEFAULT 'earnings' COMMENT 'earnings|deductions|net',
+    `is_active` TINYINT(1) DEFAULT 1,
+    PRIMARY KEY (`section_id`),
+    UNIQUE KEY `uk_name` (`section_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `0_ksf_employeepay_section_items` (
+    `item_id` INT(11) NOT NULL AUTO_INCREMENT,
+    `section_id` INT(11) NOT NULL,
+    `element_code` VARCHAR(20) NOT NULL COMMENT 'e.g., G01, I01-I99, CPP, TAX',
+    `display_order` INT(11) DEFAULT 10,
+    `is_fixed_rate` TINYINT(1) DEFAULT 0 COMMENT '1=fixed amount*unit, 0=percent or formula',
+    `unit_description` VARCHAR(255) DEFAULT NULL COMMENT 'e.g., per booking, per add-on, % of salary',
+    PRIMARY KEY (`item_id`),
+    KEY `idx_section` (`section_id`),
+    KEY `idx_code` (`element_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT IGNORE INTO `0_ksf_employeepay_sections` (section_id, section_name, display_order, section_type) VALUES
+(1, 'Income', 1, 'earnings'),
+(2, 'Pension / RSP', 2, 'deductions'),
+(3, 'Tax Deductions', 3, 'deductions'),
+(4, 'Other Deductions', 4, 'deductions'),
+(5, 'Net Pay', 5, 'net');

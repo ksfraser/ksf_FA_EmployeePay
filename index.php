@@ -15,6 +15,7 @@ $validViews = array(
     'reimburse' => array('file' => 'pages/reimburse.php', 'security' => 'SA_EMPLOYEEPAY_ENTRY'),
     'statutory' => array('file' => 'pages/statutory.php', 'security' => 'SA_EMPLOYEEPAY_SETTINGS'),
     'tax_brackets' => array('file' => 'pages/tax_brackets.php', 'security' => 'SA_EMPLOYEEPAY_SETTINGS'),
+    'sections' => array('file' => 'pages/sections.php', 'security' => 'SA_EMPLOYEEPAY_SETTINGS'),
     'stubs' => array('file' => 'pages/stubs.php', 'security' => 'SA_EMPLOYEEPAY_VIEW'),
 );
 
@@ -31,6 +32,7 @@ $menu->addItem('entry',     _("Pay Entry"), MENU_ENTRY)
      ->addItem('settings',  _("Settings"), MENU_SETTINGS)
      ->addItem('statutory', _("Statutory"), MENU_SETTINGS)
      ->addItem('tax_brackets', _("Tax Brackets"), MENU_SETTINGS)
+     ->addItem('sections', _("Sections"), MENU_SETTINGS)
      ->addItem('reimburse', _("Reimbursements"), MENU_ENTRY)
      ->addItem('stubs',     _("Pay Stubs"), MENU_INQUIRY);
 
