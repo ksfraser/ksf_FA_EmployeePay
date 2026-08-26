@@ -31,3 +31,5 @@ CalculationService uses:
 - `0_ksf_employeepay_pay_elements` (categories, codes)
 - `0_ksf_employeepay_entries` (line items with category reference)
 - `0_ksf_employeepay_calculations` (calculation audit/results)
+- `0_ksf_employeepay_sections` (pay stub grouping: Income 1, Pension/RSP 2, Tax 3, Other 4, Net 5)
+- `0_ksf_employeepay_section_items` (maps `element_code` to sections; editable; unlimited sections)

@@ -10,6 +10,16 @@
 - Allowance — fixed or % basic
 - Bonus — fixed or % gross
 - Commission — linked to orders (reference HRM `0_hrm_commission_entries`)
+- Incentives (`I00-I99`) — fixed rate * unit (e.g., 2x $3 per booking) or % of annual/salary
+
+### Sections (Pay Stub Grouping — unlimited, editable)
+| Order | Section | Type | Example Codes |
+|---|---|---|---|
+| 1 | Income | earnings | G01, O01, V01, H01, ALLOW, BONUS, COMM, I00-I99 |
+| 2 | Pension / RSP | deductions | RRSP, GRSP |
+| 3 | Tax Deductions | deductions | CPP, EI, TAX |
+| 4 | Other Deductions | deductions | INS, MED, LOAN |
+| 5 | Net Pay | net | Calculated result (not a pay element) |
 
 ### Deductions
 - Statutory Deduction (`STAT`): CPP, EI (employee + employer amounts, floor/ceiling, base=basic/gross)
@@ -33,3 +43,12 @@
 - Dynamic per pay period: project annual earnings based on current rate/hours to determine CPP/EI/Tax impact.
 - Annual projection: `current_earnings * (annual_hours / pay_period_hours)` to check if CPP basic exemption / EI max is exceeded.
 - Initial limits: CPP basic exemption applies to first pay period; EI applies to every period until max.
+
+### Platform / Constraints (Updated per clarifications)
+- PHP 7.3, FA 2.4.19
+- Namespace `ksfraser\FrontAccounting\EmployeePay\`
+- DB prefix `0_ksf_employeepay_`
+- NotrinosERP (competing FA fork) will NOT be installed; module fully independent
+- Composer dependencies via `ComposerDependencies::ensure()` (Calendar module pattern)
+- Sections (`0_ksf_employeepay_sections`) and items (`0_ksf_employeepay_section_items`) editable via admin (`pages/sections.php`)
+- Incentive codes (`I00-I99`) use fixed rate * unit or percentage

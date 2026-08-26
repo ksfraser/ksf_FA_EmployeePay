@@ -10,6 +10,7 @@
 - `DeductionService` (CPP/EI/Tax progressive; RRSP/GRSP pre-tax; DPSP accrual; Insurance/Medical)
 - `ReimbursementService` (expense reimbursement)
 - `GLPostingService` (posts to `0_gl_trans`, references mode)
+- `SectionService` (manages `0_ksf_employeepay_sections` and `0_ksf_employeepay_section_items`; unlimited editable sections)
 
 ## Entities
 - `PayEntry` (line item with category, amount, note, gl_account)
