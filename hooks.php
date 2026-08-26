@@ -10,6 +10,16 @@
 use ksfraser\FrontAccounting\Common\Traits\WorkflowHooksTrait;
 use ksfraser\FrontAccounting\Common\Traits\CrudOperationsTrait;
 
+// Bootstrap Composer autoloader + dependency check (matches Calendar pattern)
+if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+    require_once __DIR__ . '/vendor/autoload.php';
+}
+$composerDepsPath = dirname(__DIR__) . '/ksf_FA_Common/src/Utils/ComposerDependencies.php';
+if (file_exists($composerDepsPath)) {
+    require_once $composerDepsPath;
+    \ksfraser\FrontAccounting\Common\Utils\ComposerDependencies::ensure(__DIR__);
+}
+
 define('SS_ksf_FA_EmployeePay', 145 << 8);
 define('KSF_EMPLOYEEPAY_MODULE_NAME', 'ksf_FA_EmployeePay');
 define('KSF_EMPLOYEEPAY_CAPABILITIES', 'payroll,calculation,deduction,entry,settings,reimbursement');
