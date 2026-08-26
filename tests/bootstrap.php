@@ -14,6 +14,12 @@ foreach ($paths as $p) {
         $found = true;
     }
 }
+// Always load module source files explicitly (PHP 7.3 / FA 2.4.19 compatibility)
+$moduleFiles = glob(__DIR__ . '/../src/**/*.php');
+foreach ($moduleFiles as $f) {
+    require_once $f;
+}
+
 if (!$found) {
     // Fallback PSR-4 autoload for this module
     spl_autoload_register(function ($class) {
