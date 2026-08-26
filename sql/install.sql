@@ -10,6 +10,36 @@ CREATE TABLE IF NOT EXISTS `0_ksf_employeepay_settings` (
     UNIQUE KEY `uk_settings` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `0_ksf_employeepay_pay_elements` (
+    `element_id` INT(11) NOT NULL AUTO_INCREMENT,
+    `element_code` VARCHAR(20) NOT NULL COMMENT 'G01,O01,V01,H01,ALLOW,BONUS,COMM,REIMB',
+    `element_name` VARCHAR(100) NOT NULL,
+    `category` VARCHAR(20) DEFAULT 'earning' COMMENT 'earning|deduction|statutory|employer_contrib|bonus|reimbursement',
+    `calculation_type` VARCHAR(20) DEFAULT 'fixed' COMMENT 'fixed|percent_basic|percent_gross|formula|attendance',
+    `default_value` DECIMAL(15,2) DEFAULT 0,
+    `gl_account_code` VARCHAR(20) DEFAULT NULL COMMENT 'GL account for posting',
+    `is_taxable` TINYINT(1) DEFAULT 1,
+    `affects_gross` TINYINT(1) DEFAULT 1,
+    `is_active` TINYINT(1) DEFAULT 1,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`element_id`),
+    UNIQUE KEY `uk_code` (`element_code`),
+    KEY `idx_category` (`category`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `0_ksf_employeepay_calculations` (
+    `calc_id` INT(11) NOT NULL AUTO_INCREMENT,
+    `entry_id` INT(11) DEFAULT NULL COMMENT 'FK to 0_ksf_employeepay_entries',
+    `calculated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `annual_projected_earnings` DECIMAL(15,2) DEFAULT 0,
+    `cpp_annual_projected` DECIMAL(15,2) DEFAULT 0,
+    `ei_annual_projected` DECIMAL(15,2) DEFAULT 0,
+    `tax_annual_projected` DECIMAL(15,2) DEFAULT 0,
+    `mode` VARCHAR(20) DEFAULT 'incoming',
+    PRIMARY KEY (`calc_id`),
+    KEY `idx_entry` (`entry_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS `0_ksf_employeepay_entries` (
     `entry_id` INT(11) NOT NULL AUTO_INCREMENT,
     `period_start` DATE NOT NULL,
@@ -41,3 +71,23 @@ CREATE TABLE IF NOT EXISTS `0_ksf_employeepay_entries` (
     KEY `idx_employee` (`employee_id`),
     KEY `idx_period` (`period_start`, `period_end`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Reference pay elements (seed data) - independent of Notrinos
+INSERT IGNORE INTO `0_ksf_employeepay_pay_elements` (element_code, element_name, category, calculation_type, default_value, is_taxable, affects_gross) VALUES
+('G01', 'Regular Time', 'earning', 'fixed', 0.00, 1, 1),
+('O01', 'Overtime', 'earning', 'percent_basic', 1.50, 1, 1),
+('V01', 'Vacation Pay', 'earning', 'fixed', 0.00, 1, 1),
+('H01', 'Holiday Pay', 'earning', 'fixed', 0.00, 1, 1),
+('ALLOW', 'Allowance', 'earning', 'fixed', 0.00, 1, 1),
+('BONUS', 'Bonus / Incentive', 'earning', 'percent_gross', 0.00, 1, 1),
+('COMM', 'Commission', 'earning', 'fixed', 0.00, 1, 1),
+('REIMB', 'Expense Reimbursement', 'reimbursement', 'fixed', 0.00, 0, 0),
+('CPP', 'CPP Deduction', 'statutory', 'fixed', 0.00, 0, 0),
+('EI', 'EI Deduction', 'statutory', 'fixed', 0.00, 0, 0),
+('TAX', 'Income Tax', 'statutory', 'formula', 0.00, 0, 0),
+('RRSP', 'RRSP Deduction', 'deduction', 'fixed', 0.00, 0, 1),
+('GRSP', 'GRSP Deduction', 'deduction', 'fixed', 0.00, 0, 1),
+('DPSP', 'DPSP Accrual', 'employer_contrib', 'fixed', 0.00, 0, 0),
+('INS', 'Insurance Deduction', 'deduction', 'fixed', 0.00, 0, 0),
+('MED', 'Medical Deduction', 'deduction', 'fixed', 0.00, 0, 0),
+('LOAN', 'Loan Repayment', 'deduction', 'fixed', 0.00, 0, 0);

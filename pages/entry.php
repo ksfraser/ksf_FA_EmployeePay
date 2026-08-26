@@ -7,7 +7,7 @@ add_access_extensions();
 <div class="card">
     <div class="card-header"><?php echo _("Pay Entry"); ?></div>
     <div class="card-body">
-        <p class="text-muted">Entry screen: Regular, OT, Vacation, Holiday hours; Incentives/Commissions; Deductions (CPP/EI/Tax, RRSP/GRSP, DPSP, Insurance, Medical); Reimbursements.</p>
+        <p class="text-muted">Entry screen: Regular (G01), OT (O01), Vacation (V01), Holiday (H01) hours; Incentives/Commissions (COMM); Deductions (CPP/EI/Tax, RRSP/GRSP, DPSP, Insurance/Medical); Reimbursements (REIMB). Mode set in Settings.</p>
         <form method="post" action="?view=entry">
             <div class="row">
                 <div class="col-md-2"><label>Regular Hours</label></div>
