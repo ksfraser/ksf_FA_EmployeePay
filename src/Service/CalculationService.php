@@ -9,7 +9,8 @@ namespace ksfraser\FrontAccounting\EmployeePay\Service;
 
 class CalculationService
 {
-    private DeductionService $deductionService;
+    /** @var DeductionService */
+    private $deductionService;
 
     public function __construct()
     {
