@@ -91,3 +91,37 @@ INSERT IGNORE INTO `0_ksf_employeepay_pay_elements` (element_code, element_name,
 ('INS', 'Insurance Deduction', 'deduction', 'fixed', 0.00, 0, 0),
 ('MED', 'Medical Deduction', 'deduction', 'fixed', 0.00, 0, 0),
 ('LOAN', 'Loan Repayment', 'deduction', 'fixed', 0.00, 0, 0);
+
+CREATE TABLE IF NOT EXISTS `0_ksf_employeepay_statutory` (
+    `stat_id` INT(11) NOT NULL AUTO_INCREMENT,
+    `statutory_code` VARCHAR(20) DEFAULT NULL COMMENT 'CPP, EI, etc',
+    `statutory_name` VARCHAR(100) NOT NULL,
+    `employee_rate` DECIMAL(5,4) DEFAULT 0.0000 COMMENT 'Rate % e.g., 0.0595',
+    `employer_rate` DECIMAL(5,4) DEFAULT 0.0000,
+    `employee_fixed` DECIMAL(15,2) DEFAULT 0,
+    `employer_fixed` DECIMAL(15,2) DEFAULT 0,
+    `ceiling_amount` DECIMAL(15,2) DEFAULT NULL COMMENT 'Max annual earnings for deduction',
+    `floor_amount` DECIMAL(15,2) DEFAULT NULL COMMENT 'Min earnings before deduction',
+    `calculation_base` VARCHAR(20) DEFAULT 'basic' COMMENT 'basic|gross',
+    `employee_account` VARCHAR(20) DEFAULT NULL COMMENT 'GL account code',
+    `employer_account` VARCHAR(20) DEFAULT NULL,
+    `effective_from` DATE NOT NULL DEFAULT '2026-01-01',
+    `effective_to` DATE DEFAULT NULL,
+    `is_active` TINYINT(1) DEFAULT 1,
+    PRIMARY KEY (`stat_id`),
+    UNIQUE KEY `uk_code` (`statutory_code`, `effective_from`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `0_ksf_employeepay_tax_brackets` (
+    `bracket_id` INT(11) NOT NULL AUTO_INCREMENT,
+    `bracket_name` VARCHAR(50) DEFAULT NULL,
+    `from_amount` DECIMAL(15,2) DEFAULT 0,
+    `to_amount` DECIMAL(15,2) DEFAULT NULL COMMENT 'NULL = no limit',
+    `rate` DECIMAL(5,4) DEFAULT 0.0000 COMMENT 'Rate %',
+    `fixed_amount` DECIMAL(15,2) DEFAULT 0,
+    `effective_from` DATE NOT NULL DEFAULT '2026-01-01',
+    `effective_to` DATE DEFAULT NULL,
+    `is_active` TINYINT(1) DEFAULT 1,
+    PRIMARY KEY (`bracket_id`),
+    KEY `idx_dates` (`effective_from`, `effective_to`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
